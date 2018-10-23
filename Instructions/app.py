@@ -1,26 +1,21 @@
 # import necessary libraries
-from flask import (
-    Flask,
-    render_template,
-    jsonify,
-    request)
+
+import pandas as pd
+import datetime as data
+import numpy as np
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
-
-#################################################
-# Flask Setup
-#################################################
-app = Flask(__name__)
+from flask import Flask, jsonify
 
 
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///./Resources/hawaii.sqlite")
+engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -34,6 +29,12 @@ Station = Base.classes.station
 # Create our session (link) from Python to the DB
 session = Session(engine)
 
+#################################################
+# Flask Setup
+#################################################
+
+app = Flask(__name__)
+
 
 #################################################
 # Routes
@@ -43,39 +44,43 @@ session = Session(engine)
 # /api/v1.0/stations
 # /api/v1.0/tobs
 
+@app.route("/")
+def welcome():
+    return (
+        f"Welcome to the Hawaii temperature and precipitation API!<br/>"
+        f"Available Routes:<br/>"
+        f"/api/v1.0/precipitation"
+        f"/api/v1.0/stations"
+        f"/api/v1.0/tobs"
+    )
+
 
 
 @app.route("/api/v1.0/precipitation")
-# def send():
-#     if request.method == "POST":
-#         nickname = request.form["nickname"]
-#         age = request.form["age"]
 
-#         pet = Pet(nickname=nickname, age=age)
-#         db.session.add(pet)
-#         db.session.commit()
+def precipitation():
+    """Return the precipitation data as json"""
 
-#         return "Thanks for the form data!"
+    return jsonify(precipitation)
 
-#     return render_template("form.html")
 
 
 @app.route("/api/v1.0/stations")
-# def list_pets():
-#     results = db.session.query(Pet.nickname, Pet.age).all()
 
-#     pets = []
-#     for result in results:
-#         pets.append({
-#             "nickname": result[0],
-#             "age": result[1]
-#         })
-#     return jsonify(pets)
+def stations():
+    """Return the station data as json"""
+
+    return jsonify(stations)
+
+
 
 
 @app.route("/api/v1.0/tobs)
-# def home():
-#     return "Welcome!"
+
+def tobs():
+    """Return the tobs data as json"""
+
+    return jsonify(tobs)
 
 
 if __name__ == "__main__":
